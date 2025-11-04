@@ -274,5 +274,18 @@
 
 
   @stack('scripts')
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('logout_success'))
+<script>
+Swal.fire({
+  title: 'Logout Berhasil!',
+  text: "{{ session('logout_success') }}",
+  icon: 'success',
+  confirmButtonColor: '#db362a',
+});
+</script>
+@endif
+
 </body>
 </html>

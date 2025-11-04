@@ -113,6 +113,20 @@
       padding-right: 40px;
     }
 
+    .input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #1e293b;
+  color: #e2e8f0;
+  outline: none;
+}
+.input:focus {
+  border-color: #38bdf8;
+}
+
     /* ========== FOOTER ========== */
     footer {
       background-color: #1e293b;
@@ -134,15 +148,17 @@
         <a href="{{ url('/admin/dashboard') }}">HRIS<span> Admin</span></a>
       </div>
       <nav>
-        <a href="{{ url('/admin/dashboard') }}">Dashboard</a>
-        <a href="#">Data Karyawan</a>
-        <a href="#">Absensi</a>
-        <a href="#">Penggajian</a>
-        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
-          @csrf
-          <button type="submit" class="logout-btn">Logout</button>
-        </form>
-      </nav>
+  <a href="{{ url('/admin/dashboard') }}">Dashboard</a>
+  <a href="{{ route('karyawan.index') }}">Data Karyawan</a>
+  <a href="{{ route('divisi.index') }}">Data Divisi</a>
+  <a href="{{ route('absensi.index') }}">Absensi</a>
+  <a href="#">Penggajian</a>
+  <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+    @csrf
+    <button type="submit" class="logout-btn">Logout</button>
+  </form>
+</nav>
+
     </div>
   </header>
 
@@ -157,5 +173,48 @@
   </footer>
 
   @stack('scripts')
+  
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if(session('success'))
+<script>
+  Swal.fire({
+    title: 'Berhasil!',
+    text: "{{ session('success') }}",
+    icon: 'success',
+    confirmButtonColor: '#38bdf8',
+  });
+</script>
+@endif
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 1800
+            });
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                showConfirmButton: true
+            });
+        });
+    </script>
+@endif
+
+
 </body>
 </html>
