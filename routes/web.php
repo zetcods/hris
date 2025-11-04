@@ -46,3 +46,7 @@ Route::post('/logout', function (Request $request) {
 Route::get('/admin/dashboard', [AdminController::class, 'index'])
     ->middleware('isAdmin')
     ->name('admin.dashboard');
+
+Route::get('/about', function () {
+    return view('about');
+    })->name('about');

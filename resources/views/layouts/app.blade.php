@@ -266,6 +266,13 @@
     </footer>
   @endif
 
+@if(session('success'))
+  <script>
+    alert("{{ session('success') }}");
+  </script>
+@endif
+
+
   @stack('scripts')
 </body>
 </html>
