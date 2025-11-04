@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://zetcods.github.io/biozetcods" target="_blank">
-    <img src="https://ibb.co.com/7dY48s3J.png" width="400" alt="ZETA DiCrafters Logo">
+    <img src="https://i.ibb.co.com/7dY48s3J/ZETA-Di-Crafts-logo-putih.png" width="400" alt="ZETA DiCrafters Logo">
   </a>
 </p>
 
