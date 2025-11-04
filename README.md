@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://zetcods.github.io/biozetcods" target="_blank">
-    <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo">
+    <img src="https://ibb.co.com/7dY48s3J" width="400" alt="ZETA DiCrafters Logo">
   </a>
 </p>
 
