@@ -37,10 +37,3 @@
 | **Server Lokal** | XAMPP / Laravel Artisan Serve |
 
 ---
-
-## ⚙️ Cara Menjalankan Proyek
-
-1. **Clone repository ini**
-   ```bash
-   git clone https://github.com/username/hris.git
-   cd hris
