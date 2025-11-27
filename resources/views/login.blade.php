@@ -4,168 +4,236 @@
 
 @section('split')
 <style>
-  body {
-    background: linear-gradient(120deg, rgba(15,23,42,0.95), rgba(30,58,138,0.85)), 
-                url('{{ asset('images/hris-bg.jpg') }}') center/cover no-repeat;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .login-container {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px;
-    padding: 50px 40px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-    text-align: center;
-  }
-
-  .login-container h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #e2e8f0;
-    margin-bottom: 10px;
-  }
-
-  .login-container p {
-    color: #cbd5e1;
-    font-size: 0.95rem;
-    margin-bottom: 35px;
-  }
-
-  .login-container label {
-    display: block;
-    text-align: left;
-    color: #e2e8f0;
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin-bottom: 5px;
-  }
-
-  .login-container input[type="email"],
-  .login-container input[type="password"] {
-    width: 100%;
-    padding: 12px 15px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    color: #f8fafc;
-    font-size: 0.95rem;
-    outline: none;
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
-  }
-
-  .login-container input:focus {
-    border-color: #38bdf8;
-    box-shadow: 0 0 8px rgba(56,189,248,0.3);
-  }
-
-  .login-container .btn-primary {
-    width: 100%;
-    background: linear-gradient(90deg, #38bdf8, #3b82f6);
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: 0 5px 15px rgba(56,189,248,0.3);
-  }
-
-  .login-container .btn-primary:hover {
-    background: linear-gradient(90deg, #3b82f6, #2563eb);
-    transform: translateY(-2px);
-  }
-
-  .login-container .options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-  }
-
-  /* --- FIX bagian checkbox dan label biar sejajar --- */
-  .login-container .remember-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .login-container .remember-group input {
-    width: 16px;
-    height: 16px;
-    accent-color: #38bdf8;
-    cursor: pointer;
-  }
-
-  .login-container .remember-group label {
-    margin-bottom: 0;
-    color: #cbd5e1;
-    font-size: 0.9rem;
-  }
-
-  .login-container a {
-    color: #38bdf8;
-    font-size: 0.9rem;
-    text-decoration: none;
-  }
-
-  .login-container a:hover {
-    text-decoration: underline;
-  }
-
-  .login-container .register {
-    margin-top: 25px;
-    color: #cbd5e1;
-    font-size: 0.9rem;
-  }
-
-  .login-container .register a {
-    color: #38bdf8;
-    font-weight: 600;
-  }
-
-  @media (max-width: 500px) {
-    .login-container {
-      padding: 40px 25px;
+    /* 1. BACKGROUND FULL SCREEN (Sama dengan Welcome/About) */
+    body {
+        background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop') no-repeat center center/cover;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
     }
-  }
+
+    /* Overlay Gelap */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%);
+        z-index: -1;
+    }
+
+    /* 2. KARTU LOGIN KACA */
+    .login-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 40px;
+        border-radius: 24px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        animation: scaleIn 0.6s ease-out;
+    }
+
+    /* Header Login */
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .login-header p {
+        color: #94a3b8;
+        font-size: 0.9rem;
+    }
+
+    /* 3. INPUT FIELDS */
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        color: #cbd5e1;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1rem;
+        transition: 0.3s;
+        outline: none;
+    }
+
+    .form-control:focus {
+        border-color: #38bdf8;
+        background: rgba(15, 23, 42, 0.8);
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+    }
+
+    /* Placeholder color */
+    ::placeholder { color: #475569; }
+
+    /* 4. BUTTON & LINKS */
+    .btn-login {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #3b82f6, #6366f1);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+    }
+
+    .options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        font-size: 0.85rem;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #cbd5e1;
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        color: #38bdf8;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .forgot-link:hover { text-decoration: underline; color: #7dd3fc; }
+
+    .back-home {
+        text-align: center;
+        margin-top: 25px;
+        display: block;
+        color: #64748b;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+    .back-home:hover { color: #fff; }
+
+    /* ERROR ALERT STYLE */
+    .alert-error {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
 </style>
 
-<div class="login-container">
-  <h1>Selamat Datang di HRIS</h1>
-  <p>Masuk untuk mengelola data karyawan Anda.</p>
-
-  <form method="POST" action="{{ route('login') }}">
-    @csrf
-    <div>
-      <label for="email">Alamat E-mail</label>
-      <input id="email" type="email" name="email" required autofocus>
+<div class="login-card">
+    
+    <div class="login-header">
+        <h1>Selamat Datang</h1>
+        <p>Silakan masuk untuk melanjutkan akses.</p>
     </div>
 
-    <div>
-      <label for="password">Kata Sandi</label>
-      <input id="password" type="password" name="password" required>
+    {{-- ALERT ERROR --}}
+    @if(session('error') || $errors->any())
+    <div class="alert-error">
+        <span>⚠️</span>
+        <div>
+            {{ session('error') ?? $errors->first() }}
+        </div>
     </div>
+    @endif
 
-    <div class="options">
-      <div class="remember-group">
-        <input type="checkbox" id="remember" name="remember">
-        <label for="remember">Ingat Saya</label>
-      </div>
-      <a href="#">Lupa Kata Sandi?</a>
-    </div>
+    <form method="POST" action="{{ route('login') }}">
+        @csrf
+        
+        {{-- INPUT USERNAME/NIK --}}
+        <div class="input-group">
+            <label for="login">Email atau NIK</label>
+            <input id="login" type="text" name="login" class="form-control" 
+                   placeholder="ex: 12345678 atau admin@hris.com" 
+                   value="{{ old('login') }}" required autofocus>
+        </div>
 
-    <button type="submit" class="btn-primary">Masuk Sekarang</button>
-  </form>
+        {{-- INPUT PASSWORD --}}
+        <div class="input-group">
+            <label for="password">Kata Sandi</label>
+            <input id="password" type="password" name="password" class="form-control" 
+                   placeholder="••••••••" required>
+        </div>
 
+        {{-- OPTIONS --}}
+        <div class="options">
+            <label class="remember-me">
+                <input type="checkbox" name="remember">
+                Ingat Saya
+            </label>
+            <a href="#" class="forgot-link">Lupa Sandi?</a>
+        </div>
+
+        <button type="submit" class="btn-login">
+            🚀 Masuk Sekarang
+        </button>
+    </form>
+
+    <a href="{{ url('/') }}" class="back-home">
+        ← Kembali ke Beranda
+    </a>
 </div>
+
+{{-- SCRIPT SWEETALERT --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if(session('success'))
+<script>
+  Swal.fire({
+    icon: 'success',
+    title: 'Berhasil!',
+    text: "{{ session('success') }}",
+    background: '#1e293b',
+    color: '#e2e8f0',
+    confirmButtonColor: '#38bdf8',
+    timer: 2000,
+    showConfirmButton: false
+  });
+</script>
+@endif
 @endsection

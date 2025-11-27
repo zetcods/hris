@@ -10,11 +10,10 @@ class Divisi extends Model
     use HasFactory;
 
     protected $table = 'divisi';
-    protected $fillable = ['nama_divisi'];
+    protected $fillable = ['nama_divisi', 'role']; 
 
     public function karyawan()
-{
-    return $this->hasMany(Karyawan::class, 'divisi_id');
-}
-
+    {
+        return $this->hasMany(Karyawan::class, 'divisi_id');
+    }
 }

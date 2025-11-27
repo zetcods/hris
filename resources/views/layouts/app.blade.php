@@ -3,289 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title') - HRIS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* ---------------------------
-       RESET & GLOBAL STYLES
-    --------------------------- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+  <title>@yield('title') - HRIS System</title>
+  
+  {{-- Font Premium: Poppins --}}
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <style>
+    /* RESET & GLOBAL */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    
     body {
-      min-height: 100vh;
-      background-color: #0f172a; /* Deep navy base */
+      background-color: #0f172a; /* Fallback color */
       color: #e2e8f0;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
+      min-height: 100vh;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
+    a { text-decoration: none; color: inherit; transition: 0.3s; }
+    ul { list-style: none; }
 
-    /* ---------------------------
-       HEADER NAVBAR
-    --------------------------- */
-    .main-header {
+    /* --- NAVBAR GLASSMORPHISM --- */
+    .navbar {
       position: fixed;
       top: 0;
       width: 100%;
-      height: 70px;
-      background: rgba(15, 23, 42, 0.9);
-      backdrop-filter: blur(10px);
-      display: flex;
-      align-items: center;
-      z-index: 999;
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.25);
-    }
-
-    .main-header .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 40px;
+      height: 80px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 5%;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.6); /* Transparan gelap */
+      backdrop-filter: blur(12px); /* Blur efek kaca */
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: 0.3s;
     }
 
-    .main-header .logo a {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      transition: color 0.3s ease;
-    }
-
-    .main-header .logo span {
-      color: #38bdf8;
-    }
-
-    .main-header nav a {
-      color: #e2e8f0;
-      font-weight: 500;
-      margin-left: 25px;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .main-header nav a::after {
-      content: "";
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: #38bdf8;
-      transition: 0.3s ease;
-    }
-
-    .main-header nav a:hover {
-      color: #38bdf8;
-    }
-
-    .main-header nav a:hover::after {
-      width: 100%;
-    }
-
-    /* biar isi konten gak ketutupan header */
-    .page-default, .split {
-      padding-top: 70px;
-    }
-
-    /* ---------------------------
-       BUTTON STYLES
-    --------------------------- */
-    .btn-primary {
-      background: linear-gradient(90deg, #38bdf8, #3b82f6);
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
       color: #fff;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 3px 10px rgba(56,189,248,0.3);
+      letter-spacing: 1px;
     }
+    .logo span { color: #38bdf8; } /* Titik biru */
 
-    .btn-primary:hover {
-      background: linear-gradient(90deg, #3b82f6, #2563eb);
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      border: 2px solid #38bdf8;
-      color: #38bdf8;
-      background: transparent;
-      padding: 12px 28px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .btn-outline:hover {
-      background: #38bdf8;
-      color: #0f172a;
-    }
-
-    /* ---------------------------
-       LAYOUT NORMAL (Welcome, About)
-    --------------------------- */
-    main.page-default {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 60px 20px;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    }
-
-    footer {
-      background-color: #1e293b;
-      color: #94a3b8;
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9rem;
-      letter-spacing: 0.3px;
-    }
-
-    /* ---------------------------
-       SPLIT LAYOUT (Login, Register)
-    --------------------------- */
-    .split {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-    }
-
-    .split .left {
-      flex: 1;
-      background: #f1f5f9;
-      color: #0f172a;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0 80px;
-      box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-    }
-
-    .split .right {
-      flex: 1;
-      position: relative;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    .split .right::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, rgba(15,23,42,0.8), rgba(37,99,235,0.7));
-      z-index: 1;
-    }
-
-    .split .right img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      filter: brightness(70%);
-    }
-
-    .split .right p {
-      font-size: 1.4rem;
-      line-height: 1.6;
-      padding: 0 40px 80px;
-      z-index: 2;
+    .nav-links { display: flex; gap: 30px; align-items: center; }
+    
+    .nav-links a {
       font-weight: 500;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      position: relative;
     }
 
-    .split .right span {
-      color: #fbbf24;
+    .nav-links a:hover { color: #fff; }
+
+    /* Tombol Login di Navbar */
+    .btn-nav-login {
+      padding: 10px 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      color: #fff !important;
       font-weight: 600;
+      transition: 0.3s;
+    }
+    .btn-nav-login:hover {
+      background: #38bdf8;
+      border-color: #38bdf8;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
     }
 
-    @media (max-width: 992px) {
-      .split {
-        flex-direction: column;
-      }
-      .split .right {
-        display: none;
-      }
-      .split .left {
-        width: 100%;
-        padding: 40px;
-      }
+    /* --- CONTENT WRAPPER --- */
+    main { flex: 1; position: relative; }
+
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: #020617;
+      color: #64748b;
+      font-size: 0.9rem;
+      border-top: 1px solid #1e293b;
+      z-index: 10;
     }
   </style>
-  @stack('styles')
 </head>
+
 <body>
-  {{-- HEADER NAVBAR --}}
-  <header class="main-header">
-    <div class="container">
-      <div class="logo">
-        <a href="{{ url('/') }}">HRIS<span>.</span></a>
-      </div>
-      <nav>
-        <a href="{{ url('/') }}">Home</a>
-        <a href="{{ url('about') }}">Tentang</a>
-        <a href="{{ url('login') }}">Login</a>
-      </nav>
-    </div>
+
+  {{-- NAVBAR --}}
+  <header class="navbar">
+    <a href="{{ url('/') }}" class="logo">HRIS<span>.</span></a>
+    
+    <nav class="nav-links">
+      <a href="{{ url('/') }}">Beranda</a>
+      <a href="{{ url('about') }}">Tentang</a>
+      <a href="{{ url('login') }}" class="btn-nav-login">Masuk</a>
+    </nav>
   </header>
 
-  {{-- Cek apakah pakai layout split --}}
+  {{-- CONTENT --}}
   @hasSection('split')
-    @yield('split')
+      {{-- Khusus halaman Login/Split Screen --}}
+      @yield('split')
   @else
-    {{-- layout default --}}
-    <main class="page-default">
-      <div class="content">
+      {{-- Halaman Default --}}
+      <main>
         @yield('content')
-      </div>
-    </main>
-
-    <footer>
-      © {{ date('Y') }} ZETA DiCrafters | Axel Xaven Utama
-    </footer>
+      </main>
+      <footer>
+        © {{ date('Y') }} ZETA DiCrafters — Axel Xaven Utama
+      </footer>
   @endif
 
-@if(session('success'))
-  <script>
-    alert("{{ session('success') }}");
-  </script>
-@endif
-
-
-  @stack('scripts')
-
+  {{-- SCRIPTS --}}
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('logout_success'))
-<script>
-Swal.fire({
-  title: 'Logout Berhasil!',
-  text: "{{ session('logout_success') }}",
-  icon: 'success',
-  confirmButtonColor: '#db362a',
-});
-</script>
-@endif
+  
+  @if(session('success'))
+  <script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: "{{ session('success') }}",
+        showConfirmButton: false,
+        timer: 2000,
+        background: '#1e293b',
+        color: '#e2e8f0'
+    });
+  </script>
+  @endif
 
 </body>
 </html>

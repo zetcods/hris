@@ -4,8 +4,19 @@
 
 @section('content')
   <div style="padding: 40px;">
+    
+    {{-- LOGIC CEK NAMA USER (FIXED) --}}
+    @php
+        $userName = 'Admin'; // Default fallback
+        if (Auth::guard('web')->check()) {
+            $userName = Auth::guard('web')->user()->name; // Ambil 'name' dari tabel users
+        } elseif (Auth::guard('karyawan')->check()) {
+            $userName = Auth::guard('karyawan')->user()->nama; // Ambil 'nama' dari tabel karyawan
+        }
+    @endphp
+
     <h1 style="font-size: 2.2rem; font-weight: 700; color: #f1f5f9;">
-      Selamat Datang, {{ Auth::user()->name }} 👋
+      Selamat Datang, {{ $userName }} 
     </h1>
     <p style="color: #94a3b8; margin-top: 5px;">
       Ringkasan aktivitas HRIS bulan {{ \Carbon\Carbon::now()->translatedFormat('F Y') }}
@@ -20,7 +31,7 @@
         ['Total Gaji Karyawan', 'Rp ' . number_format(\App\Models\Karyawan::sum('gaji'), 0, ',', '.')]
       ] as [$label, $value])
       <div style="background: linear-gradient(180deg,#1e293b,#0f172a); padding: 25px; border-radius: 16px;
-                  box-shadow: 0 4px 20px rgba(0,0,0,0.3); text-align:center; transition:.3s;">
+                   box-shadow: 0 4px 20px rgba(0,0,0,0.3); text-align:center; transition:.3s;">
         <h3 style="color:#38bdf8;font-size:1rem;font-weight:600;">{{ $label }}</h3>
         <p style="font-size:2rem;font-weight:700;margin-top:10px;color:#f8fafc;">{{ $value }}</p>
       </div>
@@ -29,7 +40,7 @@
 
     {{-- 📂 Daftar Divisi --}}
     <div style="background:#1e293b;padding:30px;border-radius:16px;margin-top:50px;
-                box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+                 box-shadow:0 4px 20px rgba(0,0,0,0.3);">
       <h3 style="color:#38bdf8;font-size:1.3rem;font-weight:600;margin-bottom:15px;">
         📂 Daftar Divisi
       </h3>
@@ -37,7 +48,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
           @foreach ($listDivisi as $div)
             <div style="background:#0f172a;padding:10px 15px;border-radius:8px;
-                        color:#e2e8f0;text-align:center;border:1px solid #334155;">
+                         color:#e2e8f0;text-align:center;border:1px solid #334155;">
               {{ $div->nama_divisi }}
             </div>
           @endforeach
@@ -48,6 +59,7 @@
     </div>
 
     {{-- 📊 Grafik --}}
+    {{-- JANGAN DIUBAH! Menggunakan desain grid awalmu --}}
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:35px;margin-top:50px;align-items:center;">
 
       {{-- Bar Chart --}}

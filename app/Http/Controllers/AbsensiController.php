@@ -61,4 +61,24 @@ class AbsensiController extends Controller
         $absensi->delete();
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil dihapus!');
     }
+
+    // ==========================================
+    // 🔥 FITUR BARU: PRINT REKAP ABSENSI
+    // ==========================================
+    public function print(Request $request)
+    {
+        // Ambil input bulan & tahun, default ke bulan ini kalau kosong
+        $bulan = $request->input('bulan', date('m'));
+        $tahun = $request->input('tahun', date('Y'));
+
+        // Ambil data absensi sesuai filter
+        $absensi = Absensi::with('karyawan')
+            ->whereMonth('tanggal', $bulan)
+            ->whereYear('tanggal', $tahun)
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        // Return ke view khusus print (Pastikan file print.blade.php sudah dibuat)
+        return view('admin.absensi.print', compact('absensi', 'bulan', 'tahun'));
+    }
 }

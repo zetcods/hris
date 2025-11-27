@@ -4,8 +4,9 @@
 
 @section('content')
 <div style="padding: 40px;">
-  {{-- HEADER --}}
-  <div style="display: flex; justify-content: space-between; align-items: center;">
+  
+  {{-- HEADER: JUDUL & TOMBOL TAMBAH --}}
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h1 style="font-size: 1.9rem; font-weight: 700; color: #f1f5f9;">🕒 Data Absensi</h1>
     <a href="{{ route('absensi.create') }}" 
       style="background: linear-gradient(90deg, #38bdf8, #3b82f6);
@@ -16,8 +17,37 @@
     </a>
   </div>
 
+  {{-- FORM FILTER & CETAK REKAP --}}
+  <div style="background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 35px;">
+    <form action="{{ route('absensi.print') }}" method="GET" target="_blank" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+        
+        <label style="color: #cbd5e1; font-weight: 600;">🖨️ Cetak Rekap Bulanan:</label>
+
+        {{-- Pilih Bulan --}}
+        <select name="bulan" style="padding: 10px; border-radius: 8px; background: #0f172a; color: white; border: 1px solid #475569; outline: none;">
+            @foreach(range(1, 12) as $m)
+                <option value="{{ $m }}" {{ date('m') == $m ? 'selected' : '' }}>
+                    {{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}
+                </option>
+            @endforeach
+        </select>
+
+        {{-- Pilih Tahun --}}
+        <select name="tahun" style="padding: 10px; border-radius: 8px; background: #0f172a; color: white; border: 1px solid #475569; outline: none;">
+            @foreach(range(date('Y'), 2023) as $y)
+                <option value="{{ $y }}" {{ date('Y') == $y ? 'selected' : '' }}>{{ $y }}</option>
+            @endforeach
+        </select>
+
+        <button type="submit" 
+            style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: .3s; display: flex; align-items: center; gap: 8px;">
+            <span>Cetak</span>
+        </button>
+    </form>
+  </div>
+
   {{-- TABLE --}}
-  <div style="margin-top: 35px; background: #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 25px rgba(0,0,0,0.35);">
+  <div style="background: #1e293b; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 25px rgba(0,0,0,0.35);">
     <table style="width: 100%; border-collapse: collapse;">
       <thead>
         <tr style="background: #111827; color: #38bdf8; text-align: left; font-size: 0.95rem;">

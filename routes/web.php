@@ -1,116 +1,113 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\DivisiController;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KaryawanDashboardController;
+
+// Tambahan Controller Admin
+use App\Http\Controllers\AdminCutiController;
+use App\Http\Controllers\AdminIzinController;
+use App\Http\Controllers\AdminLaporanController;
+use App\Http\Controllers\PenggajianController; 
+
+// Tambahan Controller Karyawan (PENTING BIAR GAK ERROR)
+use App\Http\Controllers\KaryawanCutiController;
 
 // ========================
-// 🔹 Halaman Utama
+// 🟢 Halaman Utama & Login
 // ========================
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// ========================
-// 🔹 Halaman Login
-// ========================
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
-
-// ========================
-// 🔹 Proses Login
-// ========================
-Route::post('/login', function (Request $request) {
-    $credentials = $request->only('email', 'password');
-
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
-
-        $user = Auth::user();
-
-        // ✅ Tambahkan flash message biar SweetAlert bisa muncul
-        session()->flash('success', 'Selamat datang, ' . $user->name . ' ');
-
-        if ($user && $user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        } else {
-            return redirect()->route('home');
-        }
-    }
-
-    return back()->withErrors([
-        'email' => 'Email atau password salah.',
-    ]);
-})->name('login.process');
-
-// ========================
-// 🔹 Logout
-// ========================
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    // ✅ Flash message biar muncul SweetAlert di halaman login
-    return redirect()->route('login')->with('logout_success', 'Anda telah logout dengan aman. Sampai jumpa lagi!');
-})->name('logout');
-// ========================
-// 🔹 Halaman Admin Dashboard
-// ========================
-Route::get('/admin/dashboard', [AdminController::class, 'index'])
-    ->middleware('isAdmin')
-    ->name('admin.dashboard');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::resource('/admin/karyawan', KaryawanController::class)
-    ->middleware('isAdmin')
-    ->names([
-        'index' => 'karyawan.index',
-        'create' => 'karyawan.create',
-        'store' => 'karyawan.store',
-        'edit' => 'karyawan.edit',
-        'update' => 'karyawan.update',
-        'destroy' => 'karyawan.destroy',
-    ]);
+// =================================================================
+// 🟢 DASHBOARD ADMIN (Wajib Login sebagai Admin / Karyawan Role Admin)
+// =================================================================
+Route::middleware(['auth:web,karyawan'])->prefix('admin')->group(function () { 
 
-// 🔹 CRUD Data Karyawan
-Route::middleware(['isAdmin'])->group(function () {
-    Route::get('/admin/karyawan', [KaryawanController::class, 'index'])->name('karyawan.index');
-    Route::get('/admin/karyawan/create', [KaryawanController::class, 'create'])->name('karyawan.create');
-    Route::post('/admin/karyawan', [KaryawanController::class, 'store'])->name('karyawan.store');
-    Route::get('/admin/karyawan/{id}/edit', [KaryawanController::class, 'edit'])->name('karyawan.edit');
-    Route::put('/admin/karyawan/{id}', [KaryawanController::class, 'update'])->name('karyawan.update');
-    Route::delete('/admin/karyawan/{id}', [KaryawanController::class, 'destroy'])->name('karyawan.destroy');
-});
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
-// ========================
-// 🔹 CRUD Divisi
-// ========================
-use App\Http\Controllers\DivisiController;
+    // CRUD Master Data
+    Route::resource('/karyawan', KaryawanController::class);
+    Route::resource('/divisi', DivisiController::class);
+    
+    // 🟠 RUTE PRINT ABSENSI (TARUH SEBELUM RESOURCE ABSENSI)
+    Route::get('/absensi/print', [AbsensiController::class, 'print'])->name('absensi.print');
+    
+    Route::resource('/absensi', AbsensiController::class);
 
-Route::middleware(['isAdmin'])->group(function () {
-    Route::resource('/admin/divisi', DivisiController::class);
-    Route::get('/admin/divisi/{divisi}', [App\Http\Controllers\DivisiController::class, 'show'])->name('divisi.show');
-});
+    // FITUR: CUTI ADMIN
+    Route::get('/cuti', [AdminCutiController::class, 'index'])->name('admin.cuti'); 
+    Route::get('/cuti/{id}/detail', [AdminCutiController::class, 'detail'])->name('admin.cuti.detail');
+    Route::post('/cuti/{id}/approve', [AdminCutiController::class, 'approve'])->name('admin.cuti.approve');
+    Route::post('/cuti/{id}/reject', [AdminCutiController::class, 'reject'])->name('admin.cuti.reject');
 
-// Absensi
-Route::prefix('admin')->middleware(['isAdmin'])->group(function () {
-    Route::resource('absensi', \App\Http\Controllers\AbsensiController::class);
-});
-Route::middleware(['isAdmin'])->group(function () {
-    Route::resource('/admin/absensi', AbsensiController::class);
+    // FITUR: IZIN / SAKIT ADMIN
+    Route::get('/izin', [AdminIzinController::class, 'index'])->name('admin.izin');
+    Route::get('/izin/{id}/detail', [AdminIzinController::class, 'detail'])->name('admin.izin.detail'); 
+    Route::post('/izin/{id}/approve', [AdminIzinController::class, 'approve'])->name('admin.izin.approve');
+    Route::post('/izin/{id}/reject', [AdminIzinController::class, 'reject'])->name('admin.izin.reject');
+
+    // FITUR: LAPORAN MASALAH ADMIN
+    Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('admin.laporan.index'); 
+    Route::get('/laporan/{id}/detail', [AdminLaporanController::class, 'detail'])->name('admin.laporan.detail'); 
+    
+    // RUTE POST UPDATE STATUS
+    Route::post('/laporan/{id}/process', [AdminLaporanController::class, 'process'])->name('admin.laporan.process');
+    Route::post('/laporan/{id}/done', [AdminLaporanController::class, 'done'])->name('admin.laporan.done');
+    Route::post('/laporan/{id}/reject', [AdminLaporanController::class, 'reject'])->name('admin.laporan.reject'); 
+
+    // FITUR: PENGGAJIAN
+    Route::get('/penggajian', [PenggajianController::class, 'index'])->name('admin.penggajian.index');
+    Route::post('/penggajian/generate', [PenggajianController::class, 'generate'])->name('admin.penggajian.generate');
+    Route::get('/penggajian/{id}/slip', [PenggajianController::class, 'showSlip'])->name('admin.penggajian.slip');
+
+    // FITUR: ADMIN PROFILE
+    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+    Route::post('/password/update', [AdminController::class, 'updatePassword'])->name('admin.password.update');
 });
 
 
+// ===========================================
+// 🟢 DASHBOARD KARYAWAN (Wajib Login sebagai Karyawan)
+// ===========================================
+Route::middleware(['auth:karyawan'])->prefix('karyawan')->group(function () {
 
+    // Dashboard
+    Route::get('/dashboard', [KaryawanDashboardController::class, 'index'])->name('karyawan.dashboard');
 
-// ========================
-// 🔹 Halaman About
-// ========================
+    // Profile
+    Route::get('/profile', [KaryawanDashboardController::class, 'profile'])->name('karyawan.profile');
+    Route::post('/profile/update-info', [KaryawanDashboardController::class, 'updateInfo'])->name('karyawan.updateInfo');
+    Route::post('/profile/update-password', [KaryawanDashboardController::class, 'updatePassword'])->name('karyawan.updatePassword');
+
+    // Pengajuan Cuti (INI YANG SUDAH DIPERBAIKI)
+    Route::get('/cuti', [KaryawanCutiController::class, 'index'])->name('karyawan.cuti');
+    Route::post('/cuti/store', [KaryawanCutiController::class, 'store'])->name('karyawan.cuti.store');
+    Route::delete('/cuti/{id}', [KaryawanCutiController::class, 'destroy'])->name('karyawan.cuti.destroy');
+
+    // Pengajuan Izin
+    Route::get('/izin', [KaryawanDashboardController::class, 'izin'])->name('karyawan.izin');
+    Route::post('/izin/store', [KaryawanDashboardController::class, 'izinStore'])->name('karyawan.izin.store');
+    Route::delete('/izin/{id}', [KaryawanDashboardController::class, 'izinDestroy'])->name('karyawan.izin.destroy');
+
+    // Lapor Masalah
+    Route::get('/lapor', [KaryawanDashboardController::class, 'lapor'])->name('karyawan.lapor');
+    Route::post('/lapor/store', [KaryawanDashboardController::class, 'laporStore'])->name('karyawan.lapor.store');
+    Route::delete('/lapor/{id}', [KaryawanDashboardController::class, 'laporDestroy'])->name('karyawan.lapor.destroy');
+});
+
+// Halaman About
 Route::get('/about', function () {
     return view('about');
 })->name('about');

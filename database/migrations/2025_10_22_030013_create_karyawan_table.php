@@ -12,15 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('karyawan', function (Blueprint $table) {
-    $table->id();
-    $table->string('nama');
-    $table->string('email')->unique();
-    $table->string('jabatan');
-    $table->foreignId('divisi_id')->constrained('divisi')->onDelete('cascade');
-    $table->date('tanggal_masuk')->nullable();
-    $table->decimal('gaji', 15, 2)->default(0);
-    $table->timestamps();
-    });
+            $table->id();
+
+            // 🟦 Tambahkan kolom NIK DI SINI
+            $table->string('nik')->unique();
+
+            $table->string('nama');
+            $table->string('email')->unique();
+            $table->string('jabatan');
+            $table->foreignId('divisi_id')->constrained('divisi')->onDelete('cascade');
+            $table->date('tanggal_masuk')->nullable();
+            $table->decimal('gaji', 15, 2)->default(0);
+            $table->timestamps();
+        });
     }
 
     /**
